@@ -1,7 +1,6 @@
 logging = require('./logging.js')
 request = require('request');
 repeat = require('repeat');
-xml_parser = require('xml2js');
 current_speed = null
 
 rainforest_ip = null
