@@ -30,7 +30,7 @@ exports.translate_to_topic = function(in_topic) {
 
         all_configs.forEach(function(key) {
             map = config_item[key]
-            foundItem = map[topic]
+            foundItem = map[in_topic]
             if (found_topic === null && foundItem !== null && foundItem !== undefined) {
                 logging.log("  " + in_topic + " => " + foundItem)
                 found_topic = foundItem
