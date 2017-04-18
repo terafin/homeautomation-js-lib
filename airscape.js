@@ -46,9 +46,9 @@ function send_airscape_request(command, callback) {
 
     logging.log('request url: ' + airscape_url)
     request(airscape_url, function(error, response, body) {
-        if ((response !== null && response !== undefined && response.statusCode != 200) || (error !== null && error !== undefined)) {
+        if ((error !== null && error !== undefined)) {
             logging.log("error:" + error);
-            logging.log("statusCode:" + response && response.statusCode);
+            logging.log("response:" + response);
             logging.log("body:" + body);
         }
 
@@ -63,19 +63,31 @@ function check_fan() {
 
     send_airscape_request(null, function(error, body) {
         if (client_callback !== null && client_callback !== undefined) {
+            body_list = null, fixed_lines = null, fixed_body = null
+
             try {
                 body_list = body.split("\n")
                 fixed_lines = body_list.map(function(line) {
                     return line.substr(line.indexOf('<'));
                 });
-                body = fixed_lines.join("\n")
-                body = '<?xml version="1.0" encoding="utf-8"?>\n<root>\n' + body + "</root>"
+                fixed_body = fixed_lines.join("\n")
+                fixed_body = '<?xml version="1.0" encoding="utf-8"?>\n<root>\n' + fixed_body + "</root>"
+            } catch (err) {
+                logging.warn("error: " + err)
+            }
 
-                xml_parser.parseString(body, { trim: true }, function(err, result) {
-                    client_callback(result.root)
-                    current_speed = result.root.fanspd
-                });
-            } catch (err) {}
+            logging.log("fixed_body: " + fixed_body)
+            xml_parser.parseString(fixed_body, { trim: true, normalize: true, normalizeTags: true }, function(err, result) {
+                try {
+                    logging.log("result: " + Object.keys(result))
+                    callback_value = (result != null && result.root != undefined) ? result.root : null
+                    if (callback_value != null && result.root != undefined)
+                        current_speed = result.root.fanspd
+                    client_callback(callback_value)
+                } catch (err) {
+                    logging.warn("callback error: " + err)
+                }
+            });
         }
     })
 }
