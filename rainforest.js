@@ -24,51 +24,42 @@ exports.set_callback = function(callback) {
 }
 
 
-function send_request(command, callback) {
-    rainforest_url = "http://" + airscape_ip + "/cgi-bin/cgi_manager"
+function send_request(callback) {
+    rainforest_url = "http://" + rainforest_ip + "/cgi-bin/cgi_manager"
     body_payload = "<LocalCommand><Name>get_usage_data</Name><MacId>0xd8d5b90000009e89</MacId></LocalCommand>"
 
-    logging.log('request url: ' + airscape_url)
+    logging.log('request url: ' + rainforest_url)
 
-    request.post({ url: rainforest_url, payload: body_payload },
+    request.post({ url: rainforest_url, body: body_payload, json: true },
         function(err, httpResponse, body) {
-            logging.log("error:" + error);
-            logging.log("statusCode:" + httpResponse && httpResponse.statusCode);
+            logging.log("error:" + err);
+            logging.log("statusCode:" + httpResponse !== null && httpResponse.statusCode);
             logging.log("body:" + body);
             if (callback !== null && callback !== undefined) {
-                callback(error, body)
+                callback(err, body)
             }
-        }).auth(rainforest_user, rainforest_pass, false);;
+        }).auth(rainforest_user, rainforest_pass, true);
 }
 
 function check_power() {
     logging.log("Checking power...")
 
-    send_request(null, function(error, body) {
+    send_request(function(error, body) {
         if (client_callback !== null && client_callback !== undefined) {
             try {
-                body_list = body.split("\n")
-                fixed_lines = body_list.map(function(line) {
-                    return line.substr(line.indexOf('<'));
-                });
-                body = fixed_lines.join("\n")
-                body = '<?xml version="1.0" encoding="utf-8"?>\n<root>\n' + body + "</root>"
-
-                xml_parser.parseString(body, { trim: true }, function(err, result) {
-                    client_callback(result.root)
-                    current_speed = result.root.fanspd
-                });
+                logging.log("body:" + body);
+                client_callback(body)
             } catch (err) {}
         }
     })
 }
 
 function start_monitoring() {
-    logging.log("Starting to monitor: " + airscape_ip)
-    repeat(check_fan).every(5, 's').start.in(1, 'sec');
+    logging.log("Starting to monitor: " + rainforest_ip)
+    repeat(check_power).every(5, 's').start.in(1, 'sec');
 }
 
 function speed_up() {
     logging.log("... upping speed")
-    send_airscape_request(1, null)
+    send_request(null)
 }
