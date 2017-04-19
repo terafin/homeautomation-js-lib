@@ -112,7 +112,8 @@ function subscribe_to_mqtt(new_items, name_map) {
             Object.keys(measurements).forEach(function(measurement) {
                 var lookup_id = mqtt_info.prefix + ":" + measurement
                 var found = name_map[lookup_id]
-                var value = measurements[measurement]
+                var value = Number("" + measurements[measurement])
+                if (value < 0) value *= -1
                 logging.log("measurement: " + found.label + "   value: " + value)
                 new_topic = topic_prefix + "/" + found.label
                 client_callback(new_topic, "" + value)
