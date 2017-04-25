@@ -1,11 +1,37 @@
-enable_logging = false
+const Syslog = require('syslog')
+var syslog = null
 
-exports.log = function(some_string) {
-    if (enable_logging) console.log(some_string)
+var enable_logging = false
+
+exports.setRemoteHost = function(remoteHost, remotePort) {
+    syslog = Syslog.createClient(remotePort, remoteHost)
 }
 
-exports.warn = function(some_string) {
-    console.log(some_string)
+exports.log = function(someString) {
+    if (enable_logging) console.log(someString)
+
+    if (syslog !== null)
+        syslog.info(someString)
+}
+
+exports.info = function(someValue) {
+    var string = null
+
+    if ((typeof someValue) === typeof('')) {
+        string = someValue
+    } else {
+        string = JSON.stringify(someValue)
+    }
+
+    if (syslog !== null)
+        syslog.info(string)
+}
+
+exports.warn = function(someString) {
+    console.log(someString)
+    if (syslog !== null)
+        syslog.warn(someString)
+
 }
 
 exports.set_enabled = function(enabled) {
