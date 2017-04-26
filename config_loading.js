@@ -56,7 +56,8 @@ exports.isVoiceEnabledForTopic = function(in_topic) {
 
             const topic = map['topic']
             if (topic === in_topic) {
-                voiceResult = map['voice_control']
+                if ( map['voice_control'] !== undefined )
+                    voiceResult = map['voice_control']
                 foundVoice = true
             }
 
