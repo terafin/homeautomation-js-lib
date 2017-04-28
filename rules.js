@@ -1,4 +1,5 @@
 const fs = require('fs')
+const EventEmitter = require('events')
 const path = require('path')
 const watch = require('watch')
 const yaml = require('js-yaml')
@@ -7,8 +8,9 @@ const logging = require('./logging.js')
 var configs = []
 var config_path = null
 
+module.exports = new EventEmitter()
 
-exports.load_path = function(in_path) {
+module.exports.load_path = function(in_path) {
     config_path = in_path
         // Watch Path
     watch.watchTree(config_path, function(f, curr, prev) {
@@ -17,7 +19,7 @@ exports.load_path = function(in_path) {
     })
 }
 
-exports.get_configs = function() {
+module.exports.get_configs = function() {
     return configs
 }
 
@@ -32,20 +34,7 @@ module.exports.ruleIterator = function(callback) {
 function print_rule_config() {
     configs.forEach(function(config_item) {
         Object.keys(config_item).forEach(function(key) {
-            logging.log(' Device [' + key + ']')
-            const map = config_item[key]
-
-            const topic = map['topic']
-            const src_topic = map['change_topic']
-            const voice = map['voice_control']
-            const name = map['name']
-
-            logging.log('            name: ' + name)
-            logging.log('           topic: ' + topic)
-            logging.log('       src_topic: ' + src_topic)
-            logging.log('           voice: ' + voice)
-            logging.log('')
-
+            logging.log(' Rule [' + key + ']')
         }, this)
     }, this)
 }
@@ -71,5 +60,6 @@ function load_rule_config() {
 
         logging.log('...done loading rules')
         print_rule_config()
+        module.exports.emit('rules-loaded')
     })
 }
