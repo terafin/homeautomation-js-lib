@@ -1,14 +1,16 @@
 const fs = require('fs')
 const path = require('path')
 const watch = require('watch')
+const EventEmitter = require('events')
 const yaml = require('js-yaml')
 const logging = require('./logging.js')
 
 var configs = []
 var config_path = null
 
+module.exports = new EventEmitter()
 
-exports.load_path = function(in_path) {
+module.exports.load_path = function(in_path) {
     config_path = in_path
         // Watch Path
     watch.watchTree(config_path, function(f, curr, prev) {
@@ -17,11 +19,19 @@ exports.load_path = function(in_path) {
     })
 }
 
-exports.get_configs = function() {
+module.exports.get_configs = function() {
     return configs
 }
 
-exports.nameForTopic = function(in_topic) {
+module.exports.deviceIterator = function(callback) {
+    configs.forEach(function(config_item) {
+        Object.keys(config_item).forEach(function(key) {
+            callback(key, config_item[key])
+        }, this)
+    }, this)
+}
+
+module.exports.nameForTopic = function(in_topic) {
     var foundName = null
 
     configs.forEach(function(config_item) {
@@ -42,7 +52,7 @@ exports.nameForTopic = function(in_topic) {
     return foundName
 }
 
-exports.isVoiceEnabledForTopic = function(in_topic) {
+module.exports.isVoiceEnabledForTopic = function(in_topic) {
     var foundVoice = false
     var voiceResult = false
 
@@ -56,7 +66,7 @@ exports.isVoiceEnabledForTopic = function(in_topic) {
 
             const topic = map['topic']
             if (topic === in_topic) {
-                if ( map['voice_control'] !== undefined )
+                if (map['voice_control'] !== undefined)
                     voiceResult = map['voice_control']
                 foundVoice = true
             }
@@ -67,7 +77,7 @@ exports.isVoiceEnabledForTopic = function(in_topic) {
     return voiceResult
 }
 
-exports.translate_to_topic = function(in_topic) {
+module.exports.translate_to_topic = function(in_topic) {
     var found_topic = null
 
     configs.forEach(function(config_item) {
@@ -88,7 +98,7 @@ exports.translate_to_topic = function(in_topic) {
     return found_topic
 }
 
-exports.translate_from_topic = function(in_topic) {
+module.exports.translate_from_topic = function(in_topic) {
     var found_topic = null
 
     configs.forEach(function(config_item) {
@@ -151,6 +161,6 @@ function load_device_config() {
         })
 
         logging.log('...done loading configs')
-        print_device_config()
+        module.exports.emit('config-loaded')
     })
 }
