@@ -32,7 +32,11 @@ module.exports.ruleIterator = function(callback) {
 }
 
 function print_rule_config() {
+    if (configs === null || configs === undefined) return
+
     configs.forEach(function(config_item) {
+        if (config_item === null || configs === config_item) return
+
         Object.keys(config_item).forEach(function(key) {
             logging.log(' Rule [' + key + ']')
         }, this)
