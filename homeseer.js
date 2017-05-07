@@ -8,19 +8,26 @@ exports.set_path = function(new_path) {
 
 exports.publish = function(deviceRefID, targetValue) {
     if (homeseer_json_api_path === null || homeseer_json_api_path === undefined) {
-        logging.log('homeseer_json_api_path not defined')
+        logging.error('homeseer_json_api_path not defined')
         return
     }
 
     const JSON_Path = '/JSON?request=controldevicebyvalue&ref='
     var homeseer_url = homeseer_json_api_path + JSON_Path + deviceRefID + '&value=' + targetValue
 
-    logging.log('request url: ' + homeseer_url)
+    logging.info('sending homeseer action: ' + homeseer_url, {
+        action: 'send-homeseer-action',
+        url: homeseer_url
+    })
     request(homeseer_url, function(error, response, body) {
         if ((response !== null) || (error !== null && error !== undefined)) {
-            logging.log('error:', error)
-            logging.log('statusCode:', response && response.statusCode)
-            logging.log('body:', body)
+            logging.error('homeseer action failed: ' + homeseer_url, {
+                event: 'homeseer-action-failed',
+                error: error,
+                code: (response && response.statusCode ? response.statusCode : 'none'),
+                body: body,
+                url: homeseer_url
+            })
         }
     })
 }

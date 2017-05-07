@@ -14,7 +14,7 @@ module.exports.load_path = function(in_path) {
     config_path = in_path
         // Watch Path
     watch.watchTree(config_path, function(f, curr, prev) {
-        logging.log('Updating rules')
+        logging.info('Updating rules')
         load_rule_config()
     })
 }
@@ -38,7 +38,7 @@ function print_rule_config() {
         if (config_item === null || configs === config_item) return
 
         Object.keys(config_item).forEach(function(key) {
-            logging.log(' Rule [' + key + ']')
+            logging.debug(' Rule [' + key + ']')
         }, this)
     }, this)
 }
@@ -47,7 +47,7 @@ function load_rule_config() {
     fs.readdir(config_path, function(err, files) {
         configs = []
 
-        logging.log('Loading rules at path: ' + config_path)
+        logging.info('Loading rules at path: ' + config_path)
         if (err) {
             throw err
         }
@@ -57,12 +57,12 @@ function load_rule_config() {
         }).filter(function(file) {
             return fs.statSync(file).isFile()
         }).forEach(function(file) {
-            logging.log(' - Loading: ' + file)
+            logging.info(' - Loading: ' + file)
             const doc = yaml.safeLoad(fs.readFileSync(file, 'utf8'))
             configs.push(doc)
         })
 
-        logging.log('...done loading rules')
+        logging.info('...done loading rules')
         print_rule_config()
         module.exports.emit('rules-loaded')
     })

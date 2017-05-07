@@ -8,36 +8,36 @@ var healthCheckPort = 80
 var healthCheckTime = 60
 var healthCheckURL = '/healthcheck'
 
-exports.healthyEvent = function () {
+exports.healthyEvent = function() {
     lastHealthEventDate = new Date()
-    logging.log('healthy event: ' + lastHealthEventDate)
+    logging.info('healthy event: ' + lastHealthEventDate)
 }
 
-exports.unhealthyEvent = function () {
+exports.unhealthyEvent = function() {
     lastHealthEventDate = null
-    logging.log('unhealthy event: ' + lastHealthEventDate)
+    logging.error('unhealthy event: ' + lastHealthEventDate)
 }
 
-exports.startHealthChecks = function (url, port, time) {
+exports.startHealthChecks = function(url, port, time) {
     healthCheckPort = port
     healthCheckTime = time
-    if ( url !== null )
+    if (url !== null)
         healthCheckURL = url
 
     const app = express()
 
     app.get(healthCheckURL, function(req, res) {
-        if ( lastHealthEventDate === null ) {
-            logging.log('health check, but nothing healthy')
+        if (lastHealthEventDate === null) {
+            logging.info('health check, but nothing healthy')
             res.send('empty, bad')
             return
         }
 
         var difference = Date.now() - lastHealthEventDate
         difference /= 1000
-        logging.log('health check time difference: ' + difference)
+        logging.debug('health check time difference: ' + difference)
 
-        if ( difference > healthCheckTime  ) {
+        if (difference > healthCheckTime) {
             res.sendStatus(501)
         } else {
             res.send('OK difference: ' + difference)
@@ -45,6 +45,6 @@ exports.startHealthChecks = function (url, port, time) {
     })
 
     app.listen(healthCheckPort, function() {
-        logging.log('health check listening on port: ', healthCheckPort)
-})
+        logging.info('health check listening on port: ', healthCheckPort)
+    })
 }
