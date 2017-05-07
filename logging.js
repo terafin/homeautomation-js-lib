@@ -15,7 +15,7 @@ var name = process.env.name
 if (name === null || name === undefined) {
     name = 'winston'
 }
-winston.info('Logging enabled for ' + name + '   (logstash sending to: ' + logstashHost + ':' + logstashPort)
+winston.info('Logging enabled for ' + name + '   (logstash sending to: ' + logstashHost + ':' + logstashPort + ')')
 
 module.exports = winston
 
