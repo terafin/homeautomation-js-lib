@@ -10,12 +10,12 @@ var healthCheckURL = '/healthcheck'
 
 exports.healthyEvent = function() {
     lastHealthEventDate = new Date()
-    logging.info('healthy event: ' + lastHealthEventDate)
+    logging.info('healthy event', { event: 'healthy-check', lastHealthEventDate: lastHealthEventDate })
 }
 
 exports.unhealthyEvent = function() {
     lastHealthEventDate = null
-    logging.error('unhealthy event: ' + lastHealthEventDate)
+    logging.error('unhealthy event', { event: 'unhealthy-check', lastHealthEventDate: lastHealthEventDate })
 }
 
 exports.startHealthChecks = function(url, port, time) {
