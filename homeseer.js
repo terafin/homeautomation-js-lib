@@ -29,5 +29,9 @@ exports.publish = function(deviceRefID, targetValue) {
                 url: homeseer_url
             })
         }
+        logging.info('sending homeseer action: ' + homeseer_url, {
+            action: 'homeseer-action-complete',
+            url: homeseer_url
+        })
     })
 }
