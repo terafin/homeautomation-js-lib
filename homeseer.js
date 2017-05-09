@@ -20,7 +20,12 @@ exports.publish = function(deviceRefID, targetValue) {
         url: homeseer_url
     })
     request(homeseer_url, function(error, response, body) {
-        if ((response !== null) || (error !== null && error !== undefined)) {
+        var statusCode = 401
+
+        if (response !== null && response.statusCode !== undefined) {
+            statusCode = response.statusCode
+        }
+        if (statusCode !== 200 && (response !== null) || (error !== null && error !== undefined)) {
             logging.error('homeseer action failed: ' + homeseer_url, {
                 event: 'homeseer-action-failed',
                 error: error,
