@@ -57,6 +57,9 @@ function load_device_config() {
             }).filter(function(file) {
                 return fs.statSync(file).isFile()
             }).forEach(function(file) {
+                if (file.includes('._')) {
+                    return
+                }
                 logging.info(' - Loading: ' + file)
                 const doc = yaml.safeLoad(fs.readFileSync(file, 'utf8'))
                 configs.push(doc)
