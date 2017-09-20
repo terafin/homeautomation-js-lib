@@ -7,8 +7,10 @@ if (redis.RedisClient.prototype.valueForTopic == null) redis.RedisClient.prototy
     if (topic.endsWith('/set')) {
         callback('cannot get value for /set topic', null)
         return
-    }
-    if (topic.startsWith('/homeseer/action/')) {
+    } else if (topic.startsWith('happy')) {
+        callback('cannot get value for happy/ topic', null)
+        return
+    } else if (topic.startsWith('/homeseer/action/')) {
         callback('cannot get value for /homeseer/action/ topic', null)
         return
     }
