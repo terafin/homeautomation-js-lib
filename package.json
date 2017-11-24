@@ -1,0 +1,25 @@
+{
+    "name": "homeautomation-js-lib",
+    "version": "0.0.1",
+    "description": "Generic stuff to use",
+    "license": "MIT",
+    "repository": {
+        "url": "https://github.com/terafin/homeautomation-js-lib"
+    },
+    "dependencies": {
+        "express": "*",
+        "js-yaml": "^3.8.3",
+        "lodash": "^4.17.4",
+        "mqtt": "^2.6.2",
+        "path": "^0.12.7",
+        "request": "^2.81.0",
+        "url": "*",
+        "watch": "^1.0.2",
+        "winston": "^2.3.1",
+        "winston-logstash": "^0.3.0",
+        "winston-splunk-httplogger": "^1.2.2"
+    },
+    "engines": {
+        "node": ">=4"
+    }
+}
