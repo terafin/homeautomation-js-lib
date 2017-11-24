@@ -2,7 +2,6 @@ const logging = require('./logging.js')
 const request = require('request')
 const repeat = require('repeat')
 const EventEmitter = require('events')
-const _ = require('lodash')
 
 const rainforest_ip = process.env.RAINFOREST_IP
 const rainforest_user = process.env.RAINFOREST_USER
