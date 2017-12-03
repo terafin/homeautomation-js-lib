@@ -13,6 +13,8 @@ if (_.isNil(name)) {
     name = 'winston'
 }
 
+var bunyanDebugStream = require('bunyan-debug-stream');
+
 var logger = bunyan.createLogger({
     level: (disableSyslog ? 'error' : 'info'),
     type: 'raw',
