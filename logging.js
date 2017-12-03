@@ -14,15 +14,15 @@ if (_.isNil(logName)) {
 }
 
 var bunyanDebugStream = require('bunyan-debug-stream');
+var PrettyStream = require('bunyan-prettystream');
+var prettyStdOut = new PrettyStream();
+prettyStdOut.pipe(process.stdout);
 
 var logger = bunyan.createLogger({
     name: '' + logName,
-    level: (disableSyslog ? 'error' : 'info'),
+    level: 'info',
     type: 'raw',
-    stream: bunyanDebugStream({
-        basepath: __dirname, // this should be the root folder of your project.
-        forceColor: true
-    })
+    stream: prettyStdOut
 })
 
 
