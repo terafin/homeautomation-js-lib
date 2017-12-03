@@ -26,13 +26,19 @@ var splunkSettings = {
 console.log('starting winston logging for: ' + name)
 
 if (disableSyslog !== false) {
+    var bunyanDebugStream = require('bunyan-debug-stream');
+    logger.addStream({
+        level: 'info',
+        type: 'raw',
+        stream: bunyanDebugStream({
+            basepath: __dirname, // this should be the root folder of your project.
+            forceColor: true
+        })
+    });
+
     logger.info(' => enabling console logging')
     logger.warn(' => enabling console logging warn')
     logger.error(' => enabling console logging error')
-    logger.log({
-        level: 'info',
-        message: 'Hello distributed log files!'
-    });
 
     logger.info('Hello again distributed logs');
 }
