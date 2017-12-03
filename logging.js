@@ -31,13 +31,13 @@ module.exports = winston
 
 
 if (!_.isNil(splunkSettings.token)) {
-    winstin.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
     winston.add(Winston.transports.SplunkStreamEvent, { splunk: splunkSettings })
+    winstin.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
 }
 
 if (disableSyslog !== false) {
-    winston.info(' => enabling console logging')
-    logger.add(new winston.transports.Console({
+    winston.add(new winston.transports.Console({
         format: winston.format.simple()
     }))
+    winston.info(' => enabling console logging')
 }
