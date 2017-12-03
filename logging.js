@@ -29,7 +29,7 @@ var splunkSettings = {
 
 console.log('starting winston logging for: ' + name)
 
-module.exports = winston
+module.exports = logger
 
 
 if (!_.isNil(splunkSettings.token)) {
