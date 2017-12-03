@@ -30,10 +30,10 @@ var splunkSettings = {
     token: process.env.SPLUNK_TOKEN,
     host: process.env.SPLUNK_HOST,
     source: 'home-automation',
-    sourcetype: name
+    sourcetype: logName
 }
 
-console.log('starting winston logging for: ' + name)
+console.log('starting winston logging for: ' + logName)
 
 if (disableSyslog !== false) {
     logger.info(' => console logging enabled')
