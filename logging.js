@@ -5,9 +5,7 @@ require('winston-splunk-httplogger')
 const disableSyslog = process.env.DISABLE_SYSLOG
 
 var winston = new(Winston.Logger)({
-    transports: [
-        new(Winston.transports.Console)({ level: ((disableSyslog === true) ? 'error' : 'info') }),
-    ]
+    transports: []
 })
 
 var name = process.env.name
@@ -27,10 +25,19 @@ var splunkSettings = {
     sourcetype: name
 }
 
-winston.info('Logging enabled for ' + name + '   (splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token + ')')
+console.log('starting winston logging for: ' + name)
 
 module.exports = winston
 
+
 if (!_.isNil(splunkSettings.token)) {
+    winstin.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
     winston.add(Winston.transports.SplunkStreamEvent, { splunk: splunkSettings })
+}
+
+if (disableSyslog !== false) {
+    winston.info(' => enabling console logging')
+    logger.add(new winston.transports.Console({
+        format: winston.format.simple()
+    }))
 }
