@@ -13,7 +13,7 @@ if (_.isNil(name)) {
     name = 'winston'
 }
 
-var logger = bunyan.createLogger({ name: name })
+var logger = bunyan.createLogger('main-logger')
 
 
 var splunkSettings = {
@@ -37,10 +37,6 @@ if (disableSyslog !== false) {
     });
 
     logger.info(' => enabling console logging')
-    logger.warn(' => enabling console logging warn')
-    logger.error(' => enabling console logging error')
-
-    logger.info('Hello again distributed logs');
 }
 
 if (!_.isNil(splunkSettings.token)) {
