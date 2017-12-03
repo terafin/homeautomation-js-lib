@@ -1,14 +1,7 @@
 const _ = require('lodash')
-var winston = require('winston')
-require('winston-splunk-httplogger')
+var bunyan = require('bunyan')
 
 const disableSyslog = process.env.DISABLE_SYSLOG
-
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    transports: []
-});
 
 var name = process.env.name
 
@@ -20,6 +13,9 @@ if (_.isNil(name)) {
     name = 'winston'
 }
 
+var logger = bunyan.createLogger({ name: name })
+
+
 var splunkSettings = {
     token: process.env.SPLUNK_TOKEN,
     host: process.env.SPLUNK_HOST,
@@ -29,17 +25,21 @@ var splunkSettings = {
 
 console.log('starting winston logging for: ' + name)
 
-module.exports = logger
+if (disableSyslog !== false) {
+    logger.info(' => enabling console logging')
+    logger.warn(' => enabling console logging warn')
+    logger.error(' => enabling console logging error')
+    logger.log({
+        level: 'info',
+        message: 'Hello distributed log files!'
+    });
 
+    logger.info('Hello again distributed logs');
+}
 
 if (!_.isNil(splunkSettings.token)) {
-    logger.add(Winston.transports.SplunkStreamEvent, { splunk: splunkSettings })
     logger.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
 }
 
-if (disableSyslog !== false) {
-    logger.add(new winston.transports.Console({
-        format: winston.format.simple()
-    }))
-    logger.info(' => enabling console logging')
-}
+
+module.exports = logger
