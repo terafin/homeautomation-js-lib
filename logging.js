@@ -1,5 +1,7 @@
 const _ = require('lodash')
 var bunyan = require('bunyan')
+var splunkBunyan = require("splunk-bunyan-logger");
+var PrettyStream = require('bunyan-prettystream');
 
 const disableSyslog = process.env.DISABLE_SYSLOG
 
@@ -13,14 +15,12 @@ if (_.isNil(logName)) {
     logName = 'winston'
 }
 
-var bunyanDebugStream = require('bunyan-debug-stream');
-var PrettyStream = require('bunyan-prettystream');
 var prettyStdOut = new PrettyStream();
 prettyStdOut.pipe(process.stdout);
 
 var logger = bunyan.createLogger({
     name: '' + logName,
-    level: 'info',
+    level: (disableSyslog ? 'error' : 'info'),
     type: 'raw',
     stream: prettyStdOut
 })
@@ -28,9 +28,7 @@ var logger = bunyan.createLogger({
 
 var splunkSettings = {
     token: process.env.SPLUNK_TOKEN,
-    host: process.env.SPLUNK_HOST,
-    source: 'home-automation',
-    sourcetype: logName
+    url: process.env.SPLUNK_HOST,
 }
 
 console.log('starting winston logging for: ' + logName)
@@ -40,7 +38,13 @@ if (disableSyslog !== false) {
 }
 
 if (!_.isNil(splunkSettings.token)) {
-    logger.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
+    logger.info(' => splunk sending to: ' + splunkSettings.url + ':' + splunkSettings.token)
+    bunyan.addStream({
+        name: logName,
+        streams: [
+            splunkStream
+        ]
+    })
 }
 
 
