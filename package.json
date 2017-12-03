@@ -17,7 +17,7 @@
         "request": "^2.81.0",
         "url": "*",
         "watch": "^1.0.2",
-        "winston": "^2.3.1",
+        "winston": "next",
         "winston-logstash": "^0.3.0",
         "winston-splunk-httplogger": "^1.2.2"
     },
