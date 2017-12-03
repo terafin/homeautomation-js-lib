@@ -1,12 +1,14 @@
 const _ = require('lodash')
-var Winston = require('winston')
+var winston = require('winston')
 require('winston-splunk-httplogger')
 
 const disableSyslog = process.env.DISABLE_SYSLOG
 
-var winston = new(Winston.Logger)({
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
     transports: []
-})
+});
 
 var name = process.env.name
 
@@ -31,13 +33,13 @@ module.exports = winston
 
 
 if (!_.isNil(splunkSettings.token)) {
-    winston.add(Winston.transports.SplunkStreamEvent, { splunk: splunkSettings })
-    winstin.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
+    logger.add(Winston.transports.SplunkStreamEvent, { splunk: splunkSettings })
+    logger.info(' => splunk sending to: ' + splunkSettings.host + ':' + splunkSettings.token)
 }
 
 if (disableSyslog !== false) {
-    winston.add(new winston.transports.Console({
+    logger.add(new winston.transports.Console({
         format: winston.format.simple()
     }))
-    winston.info(' => enabling console logging')
+    logger.info(' => enabling console logging')
 }
