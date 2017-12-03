@@ -3,20 +3,20 @@ var bunyan = require('bunyan')
 
 const disableSyslog = process.env.DISABLE_SYSLOG
 
-var name = process.env.name
+var logName = process.env.name
 
-if (_.isNil(name)) {
-    name = process.env.LOGGING_NAME
+if (_.isNil(logName)) {
+    logName = process.env.LOGGING_NAME
 }
 
-if (_.isNil(name)) {
-    name = 'winston'
+if (_.isNil(logName)) {
+    logName = 'winston'
 }
 
 var bunyanDebugStream = require('bunyan-debug-stream');
 
 var logger = bunyan.createLogger({
-    name: name,
+    name: '' + logName,
     level: (disableSyslog ? 'error' : 'info'),
     type: 'raw',
     stream: bunyanDebugStream({
