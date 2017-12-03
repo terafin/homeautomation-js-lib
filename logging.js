@@ -13,7 +13,14 @@ if (_.isNil(name)) {
     name = 'winston'
 }
 
-var logger = bunyan.createLogger('main-logger')
+var logger = bunyan.createLogger({
+    level: (disableSyslog ? 'error' : 'info'),
+    type: 'raw',
+    stream: bunyanDebugStream({
+        basepath: __dirname, // this should be the root folder of your project.
+        forceColor: true
+    })
+})
 
 
 var splunkSettings = {
@@ -26,17 +33,7 @@ var splunkSettings = {
 console.log('starting winston logging for: ' + name)
 
 if (disableSyslog !== false) {
-    var bunyanDebugStream = require('bunyan-debug-stream');
-    logger.addStream({
-        level: 'info',
-        type: 'raw',
-        stream: bunyanDebugStream({
-            basepath: __dirname, // this should be the root folder of your project.
-            forceColor: true
-        })
-    });
-
-    logger.info(' => enabling console logging')
+    logger.info(' => console logging enabled')
 }
 
 if (!_.isNil(splunkSettings.token)) {
