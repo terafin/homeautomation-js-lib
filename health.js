@@ -10,7 +10,7 @@ var healthCheckURL = '/healthcheck'
 
 exports.healthyEvent = function() {
     lastHealthEventDate = new Date()
-    logging.info('healthy event', { event: 'healthy-check', lastHealthEventDate: lastHealthEventDate })
+    logging.debug('healthy event', { event: 'healthy-check', lastHealthEventDate: lastHealthEventDate })
 }
 
 exports.unhealthyEvent = function() {
