@@ -12,7 +12,7 @@ function fix_name(str) {
     return str
 }
 
-if (mqtt.MqttClient.prototype.smartPublish == null) mqtt.MqttClient.prototype.smartPublish = function(topic, message) {
+if (mqtt.MqttClient.prototype.smartPublish == null) mqtt.MqttClient.prototype.smartPublish = function(topic, message, options) {
     if (topic === null) {
         logging.error('empty client or topic passed into mqtt_helpers.publish')
         return
@@ -23,7 +23,7 @@ if (mqtt.MqttClient.prototype.smartPublish == null) mqtt.MqttClient.prototype.sm
     if (publish_map[topic] !== message) {
         publish_map[topic] = message
         logging.debug(' => published!')
-        this.publish(topic, message)
+        this.publish(topic, message, options)
     } else {
         logging.debug(' * not published')
     }
