@@ -34,8 +34,6 @@ exports.set_client_callback = function(callback) {
 }
 
 function send_oauth_request(callback) {
-    logging.log('oauth request url: ' + energy_curb_oauth_url)
-
     request.post(energy_curb_oauth_url, { form: { grant_type: 'password', username: energy_curb_user, password: energy_curb_pass }, json: true },
         //request.post({ url: energy_curb_oauth_url, json: true },
         //request.post(energy_curb_oauth_url, { body: "grant_type=password&username=" + energy_curb_user + "&password=" + energy_curb_pass },
@@ -114,7 +112,7 @@ function subscribe_to_mqtt(new_items, name_map) {
                 var found = name_map[lookup_id]
                 var value = Number('' + measurements[measurement])
                 if (value < 0) value *= -1
-                logging.log('measurement: ' + found.label + '   value: ' + value)
+                logging.info('measurement: ' + found.label + '   value: ' + value)
                 new_topic = topic_prefix + '/' + found.label
                 client_callback(new_topic, '' + value)
             }, this)
