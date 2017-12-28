@@ -1,5 +1,6 @@
 const express = require('express')
 const logging = require('./logging.js')
+const _ = require('lodash')
 
 var lastHealthEventDate = null
 
