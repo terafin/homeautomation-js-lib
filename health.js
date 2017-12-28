@@ -3,10 +3,9 @@ const logging = require('./logging.js')
 
 var lastHealthEventDate = null
 
-// HS Web API
-var healthCheckPort = 80
-var healthCheckTime = 60
-var healthCheckURL = '/healthcheck'
+var healthCheckPort = process.env.HEALTH_CHECK_PORT
+var healthCheckTime = process.env.HEALTH_CHECK_TIME
+var healthCheckURL = process.env.HEALTH_CHECK_URL
 
 exports.healthyEvent = function() {
     lastHealthEventDate = new Date()
@@ -19,6 +18,10 @@ exports.unhealthyEvent = function() {
 }
 
 exports.startHealthChecks = function(url, port, time) {
+    // Deprecated API, pulls from environment naturally now
+}
+
+startHealthChecks = function(url, port, time) {
     healthCheckPort = port
     healthCheckTime = time
     if (url !== null)
@@ -47,4 +50,9 @@ exports.startHealthChecks = function(url, port, time) {
     app.listen(healthCheckPort, function() {
         logging.info('health check listening on port: ', healthCheckPort)
     })
+}
+
+
+if (!_.isNil(healthCheckPort) && !_.isNil(healthCheckTime) && !_.isNil(healthCheckURL)) {
+    startHealthChecks(healthCheckURL, healthCheckPort, healthCheckTime)
 }
