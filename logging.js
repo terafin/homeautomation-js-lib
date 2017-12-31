@@ -1,6 +1,5 @@
 const _ = require('lodash')
 var bunyan = require('bunyan')
-var splunkBunyan = require("splunk-bunyan-logger");
 var PrettyStream = require('bunyan-prettystream');
 
 const disableSyslog = process.env.DISABLE_SYSLOG
