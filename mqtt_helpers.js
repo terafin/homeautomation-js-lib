@@ -71,14 +71,20 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
 
     client.on('connect', () => {
         logging.info('MQTT Connected')
+        if (!_.isNil(logName)) {
+            mqtt_options.will.topic = fix_name('/status/will/' + logName)
+            mqtt_options.will.payload = '1'
+            mqtt_options.will.retain = true
+        }
+        
         if (!_.isNil(connectedCallback))
-            connectedCallback()
+        connectedCallback()
     })
 
     client.on('disconnect', () => {
         logging.error('MQTT Disconnected, reconnecting')
         client.connect(host)
-
+    
         if (!_.isNil(disconnectedCallback))
             disconnectedCallback()
     })
