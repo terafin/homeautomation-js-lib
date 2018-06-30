@@ -60,7 +60,7 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
         mqtt_options.password = mqttPassword
     
     if (!_.isNil(logName)) {
-        mqtt_options.will.topic = fix_name('/status/will/' + logName)
+        mqtt_options.will.topic = fix_name('/status/' + logName)
         mqtt_options.will.payload = '0'
         mqtt_options.will.retain = true
     }
@@ -72,7 +72,7 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
     client.on('connect', () => {
         logging.info('MQTT Connected')
         if (!_.isNil(logName)) {
-            mqtt_options.will.topic = fix_name('/status/will/' + logName)
+            mqtt_options.will.topic = fix_name('/status/' + logName)
             mqtt_options.will.payload = '1'
             mqtt_options.will.retain = true
         }
