@@ -9,6 +9,7 @@ function fix_name(str) {
     str = str.replace(/[+\\\&\*\%\$\#\@\!]/g, '')
     str = str.replace(/\s/g, '_').trim().toLowerCase()
     str = str.replace(/__/g, '_')
+    
     return str
 }
 
@@ -35,7 +36,7 @@ const mqttPassword = process.env.MQTT_PASS
 const mqttName = process.env.MQTT_NAME
 
 
-var logName = mqttPassword
+var logName = mqttName
 
 if (_.isNil(logName)) {
     logName = process.env.name
@@ -60,6 +61,8 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
         mqtt_options.password = mqttPassword
     
     if (!_.isNil(logName)) {
+
+        mqtt_options.clientId = logName
         mqtt_options.will.topic = fix_name('/status/' + logName)
         mqtt_options.will.payload = '0'
         mqtt_options.will.retain = true
