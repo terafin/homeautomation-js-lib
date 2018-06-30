@@ -32,6 +32,19 @@ if (mqtt.MqttClient.prototype.smartPublish == null) mqtt.MqttClient.prototype.sm
 const host = process.env.MQTT_HOST
 const mqttUsername = process.env.MQTT_USER
 const mqttPassword = process.env.MQTT_PASS
+const mqttName = process.env.MQTT_NAME
+
+
+var logName = mqttPassword
+
+if (_.isNil(logName)) {
+    logName = process.env.name
+}
+
+if (_.isNil(logName)) {
+    logName = process.env.LOGGING_NAME
+}
+
 
 if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, disconnectedCallback) {
     if (_.isNil(host)) {
@@ -40,10 +53,17 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
     }
 
     var mqtt_options = {}
+
     if (!_.isNil(mqttUsername))
         mqtt_options.username = mqttUsername
     if (!_.isNil(mqttPassword))
         mqtt_options.password = mqttPassword
+    
+    if (!_.isNil(logName)) {
+        mqtt_options.will.topic = fix_name('/status/will/' + logName)
+        mqtt_options.will.payload = '0'
+        mqtt_options.will.retain = true
+    }
 
     const client = mqtt.connect(host, mqtt_options)
 
