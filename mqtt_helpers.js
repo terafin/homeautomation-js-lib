@@ -2,14 +2,13 @@ const mqtt = require('mqtt')
 const logging = require('./logging.js')
 const _ = require('lodash')
 
-
 var publish_map = {}
 
 function fix_name(str) {
     str = str.replace(/[+\\\&\*\%\$\#\@\!]/g, '')
     str = str.replace(/\s/g, '_').trim().toLowerCase()
     str = str.replace(/__/g, '_')
-    
+
     return str
 }
 
@@ -35,7 +34,6 @@ const mqttUsername = process.env.MQTT_USER
 const mqttPassword = process.env.MQTT_PASS
 const mqttName = process.env.MQTT_NAME
 
-
 var logName = mqttName
 
 if (_.isNil(logName)) {
@@ -45,7 +43,6 @@ if (_.isNil(logName)) {
 if (_.isNil(logName)) {
     logName = process.env.LOGGING_NAME
 }
-
 
 if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, disconnectedCallback) {
     if (_.isNil(host)) {
@@ -61,8 +58,7 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
         mqtt_options.password = mqttPassword
     
     if (!_.isNil(logName)) {
-
-        mqtt_options.clientId = logName
+        mqtt_options.will = {}
         mqtt_options.will.topic = fix_name('/status/' + logName)
         mqtt_options.will.payload = '0'
         mqtt_options.will.retain = true
@@ -75,9 +71,7 @@ if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, dis
     client.on('connect', () => {
         logging.info('MQTT Connected')
         if (!_.isNil(logName)) {
-            mqtt_options.will.topic = fix_name('/status/' + logName)
-            mqtt_options.will.payload = '1'
-            mqtt_options.will.retain = true
+            client.publish(fix_name('/status/' + logName), '1', {retain: true})
         }
         
         if (!_.isNil(connectedCallback))
