@@ -5,9 +5,10 @@ const _ = require('lodash')
 var publish_map = {}
 
 function fix_name(str) {
-    str = str.replace(/[+-\\\&\*\%\$\#\@\!]/g, '')
+    str = str.replace(/[+\\\&\*\%\$\#\@\!]/g, '')
     str = str.replace(/\s/g, '_').trim().toLowerCase()
     str = str.replace(/__/g, '_')
+    str = str.replace(/-/g, '_')
 
     return str
 }
