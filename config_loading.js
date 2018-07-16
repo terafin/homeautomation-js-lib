@@ -60,9 +60,13 @@ function load_device_config() {
                 if (file.includes('._')) {
                     return
                 }
-                logging.info(' - Loading: ' + file)
-                const doc = yaml.safeLoad(fs.readFileSync(file, 'utf8'))
-                configs.push(doc)
+                if (file.includes('.yml') || file.includes('.yaml')) {
+                    logging.info(' - Loading: ' + file)
+                    const doc = yaml.safeLoad(fs.readFileSync(file, 'utf8'))
+                    configs.push(doc)
+                } else {
+                    logging.info(' - Skipping: ' + file)
+                }
             })
 
             logging.info('...done loading configs')
