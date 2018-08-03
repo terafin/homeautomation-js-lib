@@ -7,7 +7,7 @@ const redisHost = process.env.REDIS_HOST
 const redisPort = process.env.REDIS_PORT
 const redisDB = process.env.REDIS_DATABASE
 
-if (Redis.setupClient == null) Redis.setupClient = function(connectedCallback) {
+if (Redis.setupClient == null) Redis.setupClient = function(connectedCallback, disconnectedCallback) {
     const redis = Redis.createClient({
         host: redisHost,
         port: redisPort,
@@ -40,6 +40,12 @@ if (Redis.setupClient == null) Redis.setupClient = function(connectedCallback) {
         logging.info('redis connected')
         if (!_.isNil(connectedCallback))
             connectedCallback()
+    })
+
+    redis.on('reconnect', function() {
+        logging.info('redis disconnected')
+        if (!_.isNil(disconnectedCallback))
+            disconnectedCallback()
     })
 
     return redis
