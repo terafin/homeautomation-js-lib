@@ -4,30 +4,32 @@ const _ = require('lodash')
 
 var publish_map = {}
 
-function fix_name(str) {
-    str = str.replace(/[+\\\&\*\%\$\#\@\!]/g, '')
-    str = str.replace(/\s/g, '_').trim().toLowerCase()
-    str = str.replace(/__/g, '_')
-    str = str.replace(/-/g, '_')
+const fix_name = function(str) {
+	str = str.replace(/[+\\&*%$#@!]/g, '')
+	str = str.replace(/\s/g, '_').trim().toLowerCase()
+	str = str.replace(/__/g, '_')
+	str = str.replace(/-/g, '_')
 
-    return str
+	return str
 }
 
-if (mqtt.MqttClient.prototype.smartPublish == null) mqtt.MqttClient.prototype.smartPublish = function(topic, message, options) {
-    if (topic === null) {
-        logging.error('empty client or topic passed into mqtt_helpers.publish')
-        return
-    }
-    topic = fix_name(topic)
+if (mqtt.MqttClient.prototype.smartPublish == null) {
+	mqtt.MqttClient.prototype.smartPublish = function(topic, message, options) {
+		if (topic === null) {
+			logging.error('empty client or topic passed into mqtt_helpers.publish')
+			return
+		}
+		topic = fix_name(topic)
 
-    logging.info(' ' + topic + ':' + message)
-    if (publish_map[topic] !== message) {
-        publish_map[topic] = message
-        logging.debug(' => published!')
-        this.publish(topic, message, options)
-    } else {
-        logging.debug(' * not published')
-    }
+		logging.info(' ' + topic + ':' + message)
+		if (publish_map[topic] !== message) {
+			publish_map[topic] = message
+			logging.debug(' => published!')
+			this.publish(topic, message, options)
+		} else {
+			logging.debug(' * not published')
+		}
+	} 
 }
 
 const host = process.env.MQTT_HOST
@@ -38,54 +40,60 @@ const mqttName = process.env.MQTT_NAME
 var logName = mqttName
 
 if (_.isNil(logName)) {
-    logName = process.env.name
+	logName = process.env.name
 }
 
 if (_.isNil(logName)) {
-    logName = process.env.LOGGING_NAME
+	logName = process.env.LOGGING_NAME
 }
 
-if (mqtt.setupClient == null) mqtt.setupClient = function(connectedCallback, disconnectedCallback) {
-    if (_.isNil(host)) {
-        logging.warn('MQTT_HOST not set, aborting')
-        process.abort()
-    }
+if (mqtt.setupClient == null) { 
+	mqtt.setupClient = function(connectedCallback, disconnectedCallback) {
+		if (_.isNil(host)) {
+			logging.warn('MQTT_HOST not set, aborting')
+			process.abort()
+		}
 
-    var mqtt_options = {}
+		var mqtt_options = {}
 
-    if (!_.isNil(mqttUsername))
-        mqtt_options.username = mqttUsername
-    if (!_.isNil(mqttPassword))
-        mqtt_options.password = mqttPassword
+		if (!_.isNil(mqttUsername)) { 
+			mqtt_options.username = mqttUsername
+		}
+		if (!_.isNil(mqttPassword)) {
+			mqtt_options.password = mqttPassword
+		}
     
-    if (!_.isNil(logName)) {
-        mqtt_options.will = {}
-        mqtt_options.will.topic = fix_name('/status/' + logName)
-        mqtt_options.will.payload = '0'
-        mqtt_options.will.retain = true
-    }
+		if (!_.isNil(logName)) {
+			mqtt_options.will = {}
+			mqtt_options.will.topic = fix_name('/status/' + logName)
+			mqtt_options.will.payload = '0'
+			mqtt_options.will.retain = true
+		}
 
-    const client = mqtt.connect(host, mqtt_options)
+		const client = mqtt.connect(host, mqtt_options)
 
-    // MQTT Observation
+		// MQTT Observation
 
-    client.on('connect', () => {
-        logging.info('MQTT Connected')
-        if (!_.isNil(logName)) {
-            client.publish(fix_name('/status/' + logName), '1', {retain: true})
-        }
+		client.on('connect', () => {
+			logging.info('MQTT Connected')
+			if (!_.isNil(logName)) {
+				client.publish(fix_name('/status/' + logName), '1', {retain: true})
+			}
         
-        if (!_.isNil(connectedCallback))
-        connectedCallback()
-    })
+			if (!_.isNil(connectedCallback)) {
+				connectedCallback() 
+			}
+		})
 
-    client.on('disconnect', () => {
-        logging.error('MQTT Disconnected, reconnecting')
-        client.connect(host)
+		client.on('disconnect', () => {
+			logging.error('MQTT Disconnected, reconnecting')
+			client.connect(host)
     
-        if (!_.isNil(disconnectedCallback))
-            disconnectedCallback()
-    })
+			if (!_.isNil(disconnectedCallback)) {
+				disconnectedCallback() 
+			}
+		})
 
-    return client
+		return client
+	} 
 }
