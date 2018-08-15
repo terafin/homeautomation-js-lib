@@ -1,7 +1,5 @@
-const fs = require('fs')
 const read_directory = require('read-directory')
 const EventEmitter = require('events')
-const path = require('path')
 const watch = require('watch')
 const yaml = require('js-yaml')
 const logging = require('./logging.js')
@@ -70,17 +68,15 @@ const load_rule_config = function() {
 			throw err
 		}
 
-		files.map(function(file) {
-			return path.join(config_path, file)
-		}).filter(function(file) {
-			return fs.statSync(file).isFile()
-		}).forEach(function(file) {
+		const fileNames = Object.keys(files)
+
+		fileNames.forEach(file => {
 			if (file.includes('._')) {
 				return
 			}
 			if (file.includes('.yml') || file.includes('.yaml')) {
 				logging.info(' - Loading: ' + file)
-				const doc = yaml.safeLoad(fs.readFileSync(file, 'utf8'))
+				const doc = yaml.safeLoad(files[file])
 				configs.push(doc)
 			} else {
 				logging.info(' - Skipping: ' + file)
