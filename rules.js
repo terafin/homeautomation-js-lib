@@ -1,4 +1,5 @@
 const fs = require('fs')
+const read_directory = require('read-directory')
 const EventEmitter = require('events')
 const path = require('path')
 const watch = require('watch')
@@ -61,7 +62,7 @@ const print_rule_config = function() {
 }
 
 const load_rule_config = function() {
-	fs.readdir(config_path, function(err, files) {
+	read_directory(config_path, function(err, files) {
 		configs = []
 
 		logging.info('Loading rules at path: ' + config_path)

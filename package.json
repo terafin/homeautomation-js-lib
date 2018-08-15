@@ -12,6 +12,7 @@
         "express": "latest",
         "js-yaml": "latest",
         "lodash": "latest",
+        "read-directory": "latest",
         "mqtt": "latest",
         "path": "latest",
         "repeat": "latest",
