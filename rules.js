@@ -59,7 +59,7 @@ const print_rule_config = function() {
 	}, this)
 }
 
-const load_rule_config = function() {
+const _load_rule_config = function() {
 	read_directory(config_path, function(err, files) {
 		configs = []
 
@@ -87,4 +87,9 @@ const load_rule_config = function() {
 		print_rule_config()
 		module.exports.emit('rules-loaded')
 	})
+}
+
+
+const load_rule_config = function() {
+	_.defer(_load_rule_config, 15 * 1000, {})
 }

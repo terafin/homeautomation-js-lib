@@ -48,7 +48,7 @@ module.exports.deviceIterator = function(callback) {
 	}, this)
 }
 
-const load_device_config = function() {
+const _load_device_config = function() {
 	try {
 		fs.readdir(config_path, function(err, files) {
 			configs = []
@@ -82,3 +82,8 @@ const load_device_config = function() {
 		logging.error('...config loaded failed: ' + e)
 	}
 }
+
+const load_device_config = function() {
+	_.defer(_load_device_config, 15 * 1000, {})
+}
+
