@@ -1,8 +1,10 @@
-const express = require('express')
 const logging = require('./logging.js')
+const url = require('url')
 const _ = require('lodash')
 
 var lastHealthEventDate = null
+
+const http = require('http')
 
 var healthCheckPort = process.env.HEALTH_CHECK_PORT
 var healthCheckTime = process.env.HEALTH_CHECK_TIME
@@ -22,6 +24,9 @@ exports.startHealthChecks = function(url, port, time) {
 	// Deprecated API, pulls from environment naturally now
 }
 
+
+// VERY primitive REST server, method call is ignored (GET/POST)
+
 const startHealthChecks = function(url, port, time) {
 	healthCheckPort = port
 	healthCheckTime = time
@@ -29,29 +34,35 @@ const startHealthChecks = function(url, port, time) {
 		healthCheckURL = url 
 	}
 
-	const app = express()
+	http
+		.createServer(function(request, response) {
+			const requestUrl = url.parse(request.url)
+			
+			switch (requestUrl.pathname) {
+			case healthCheckURL:
+				var difference = Date.now() - lastHealthEventDate
+				difference /= 1000
+				logging.info('health check time difference: ' + difference)
+	
+				response.setHeader('Content-Type', 'text/html')
 
-	app.get(healthCheckURL, function(req, res) {
-		if (lastHealthEventDate === null) {
-			logging.info('health check, but nothing healthy')
-			res.send('empty, bad')
-			return
-		}
+				if (difference > healthCheckTime) {
+					response.writeHead(501, {'Content-Type': 'text/plain'})
+					response.send('NOT OK difference: ' + difference)
+				} else {
+					response.writeHead(200, {'Content-Type': 'text/plain'})
+					response.send('OK difference: ' + difference)
+				}
+				
+				break
 
-		var difference = Date.now() - lastHealthEventDate
-		difference /= 1000
-		logging.debug('health check time difference: ' + difference)
-
-		if (difference > healthCheckTime) {
-			res.sendStatus(501)
-		} else {
-			res.send('OK difference: ' + difference)
-		}
-	})
-
-	app.listen(healthCheckPort, function() {
-		logging.info('health check listening on port: ', healthCheckPort)
-	})
+			default:
+				logging.error('invalid url:', requestUrl.pathname)
+			}
+		})
+		.listen(port, '0.0.0.0', () => {
+			logging.info(' => health checks listening on: http://0.0.0.0:' + port + healthCheckURL)
+		})
 }
 
 

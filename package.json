@@ -13,6 +13,7 @@
         "mqtt": "latest",
         "path": "latest",
         "winston": "latest",
+        "url": "latest",
         "watch": "latest"
     },
     "engines": {
