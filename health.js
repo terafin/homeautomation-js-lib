@@ -27,11 +27,11 @@ exports.startHealthChecks = function(url, port, time) {
 
 // VERY primitive REST server, method call is ignored (GET/POST)
 
-const startHealthChecks = function(url, port, time) {
+const startHealthChecks = function(inURL, port, time) {
 	healthCheckPort = port
 	healthCheckTime = time
-	if (url !== null) { 
-		healthCheckURL = url 
+	if (inURL !== null) { 
+		healthCheckURL = inURL 
 	}
 
 	http
@@ -48,10 +48,10 @@ const startHealthChecks = function(url, port, time) {
 
 				if (difference > healthCheckTime) {
 					response.writeHead(501, {'Content-Type': 'text/plain'})
-					response.send('NOT OK difference: ' + difference)
+					response.end()
 				} else {
 					response.writeHead(200, {'Content-Type': 'text/plain'})
-					response.send('OK difference: ' + difference)
+					response.end()
 				}
 				
 				break
