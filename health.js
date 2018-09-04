@@ -42,7 +42,7 @@ const startHealthChecks = function(inURL, port, time) {
 			case healthCheckURL:
 				var difference = Date.now() - lastHealthEventDate
 				difference /= 1000
-				logging.info('health check time difference: ' + difference)
+				logging.debug('health check time difference: ' + difference)
 	
 				response.setHeader('Content-Type', 'text/html')
 
