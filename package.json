@@ -7,8 +7,6 @@
         "url": "https://github.com/terafin/homeautomation-js-lib"
     },
     "dependencies": {
-        "bunyan": "latest",
-        "bunyan-prettystream": "latest",
         "express": "latest",
         "js-yaml": "latest",
         "lodash": "latest",
@@ -17,7 +15,7 @@
         "path": "latest",
         "repeat": "latest",
         "request": "latest",
-        "splunk-bunyan-logger": "latest",
+        "winston": "latest",
         "url": "latest",
         "watch": "latest",
         "xml2js": "latest"

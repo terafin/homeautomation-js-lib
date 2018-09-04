@@ -1,7 +1,4 @@
 const _ = require('lodash')
-var bunyan = require('bunyan')
-var PrettyStream = require('bunyan-prettystream')
-
 const disableSyslog = process.env.DISABLE_SYSLOG
 
 var logName = process.env.name
@@ -11,38 +8,29 @@ if (_.isNil(logName)) {
 }
 
 if (_.isNil(logName)) {
-	logName = 'winston'
+	logName = 'logger'
 }
 
-var prettyStdOut = new PrettyStream()
-prettyStdOut.pipe(process.stdout)
+const winston = require('winston')
 
-var logger = bunyan.createLogger({
-	name: '' + logName,
-	level: (disableSyslog ? 'error' : 'info'),
-	type: 'raw',
-	stream: prettyStdOut
+var logger = winston.createLogger({
+	levels: winston.config.syslog.levels,
+	transports: [new winston.transports.Console( {level: 'info',
+		format: winston.format.combine(
+			winston.format.label({label: '[' + logName + ']'}),
+			winston.format.colorize(), 
+			winston.format.timestamp({
+				format: 'YYYY-MM-DD HH:mm:ss'
+			}), 
+			winston.format.printf(info => `${info.timestamp} ${info.label} ${info.level}: ${info.message}`)
+		),
+	})]
 })
-
-
-var splunkSettings = {
-	token: process.env.SPLUNK_TOKEN,
-	url: process.env.SPLUNK_HOST,
-}
-
-console.log('starting winston logging for: ' + logName)
+  
+console.log('starting logging for: ' + logName)
 
 if (disableSyslog !== false) {
 	logger.info(' => console logging enabled')
 }
-
-if (!_.isNil(splunkSettings.token)) {
-	logger.info(' => splunk sending to: ' + splunkSettings.url + ':' + splunkSettings.token)
-	bunyan.addStream({
-		name: logName,
-		streams: [splunkStream]
-	})
-}
-
 
 module.exports = logger
