@@ -22,7 +22,7 @@ exports.startHealthChecks = function(url, port, time) {
 	// Deprecated API, pulls from environment naturally now
 }
 
-startHealthChecks = function(url, port, time) {
+const startHealthChecks = function(url, port, time) {
 	healthCheckPort = port
 	healthCheckTime = time
 	if (url !== null) { 

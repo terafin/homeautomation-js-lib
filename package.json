@@ -10,15 +10,10 @@
         "express": "latest",
         "js-yaml": "latest",
         "lodash": "latest",
-        "read-directory": "latest",
         "mqtt": "latest",
         "path": "latest",
-        "repeat": "latest",
-        "request": "latest",
         "winston": "latest",
-        "url": "latest",
-        "watch": "latest",
-        "xml2js": "latest"
+        "watch": "latest"
     },
     "engines": {
         "node": ">=4"
