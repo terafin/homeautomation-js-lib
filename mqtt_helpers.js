@@ -24,7 +24,7 @@ if (mqtt.MqttClient.prototype.smartPublish == null) {
 		logging.debug(' ' + topic + ':' + message)
 		if (publish_map[topic] !== message) {
 			publish_map[topic] = message
-			logging.info(' => published!')
+			logging.info(' => published: [' + topic + ':' + message + ']')
 			this.publish(topic, message, options)
 		} else {
 			logging.debug(' * not published')
