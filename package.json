@@ -14,7 +14,8 @@
         "path": "latest",
         "winston": "latest",
         "url": "latest",
-        "watch": "latest"
+        "watch": "latest",
+        "winston-daily-rotate-file": "latest"
     },
     "engines": {
         "node": ">=4"
