@@ -97,3 +97,19 @@ if (mqtt.setupClient == null) {
 		return client
 	} 
 }
+
+
+exports.generateTopic = function() {
+	var topicString = ''
+	var first = true
+	arguments.forEach(component => {
+		if ( first ) {
+			first = false
+		} else {
+			topicString = topicString + '/'
+		}
+		topicString = component + '/'
+	})
+
+	return topicString
+}
