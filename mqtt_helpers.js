@@ -102,14 +102,16 @@ if (mqtt.setupClient == null) {
 exports.generateTopic = function() {
 	var topicString = ''
 	var first = true
-	arguments.forEach(component => {
+
+    for (var i=0; i < arguments.length; i++) {
+		const component = arguments[i]
 		if ( first ) {
 			first = false
 		} else {
 			topicString = topicString + '/'
 		}
-		topicString = component + '/'
-	})
+		topicString = topicString + fix_name(component)
+	}
 
 	return topicString
 }
