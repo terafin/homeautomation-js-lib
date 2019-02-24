@@ -76,6 +76,9 @@ if (mqtt.setupClient == null) {
 
 		client.on('connect', () => {
 			logging.info('MQTT Connected')
+			
+			publish_map = {}
+
 			if (!_.isNil(logName)) {
 				client.publish(fix_name('/status/' + logName), '1', {retain: true})
 			}
@@ -87,6 +90,9 @@ if (mqtt.setupClient == null) {
 
 		client.on('disconnect', () => {
 			logging.error('MQTT Disconnected, reconnecting')
+		
+			publish_map = {}
+
 			client.connect(host)
     
 			if (!_.isNil(disconnectedCallback)) {
@@ -103,7 +109,7 @@ exports.generateTopic = function() {
 	var topicString = ''
 	var first = true
 
-    for (var i=0; i < arguments.length; i++) {
+	for (var i=0; i < arguments.length; i++) {
 		const component = arguments[i]
 		if ( first ) {
 			first = false
