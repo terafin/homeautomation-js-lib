@@ -11,6 +11,7 @@
         "js-yaml": "latest",
         "lodash": "latest",
         "mqtt": "latest",
+        "graphite": "latest",
         "path": "latest",
         "winston": "latest",
         "url": "latest",
