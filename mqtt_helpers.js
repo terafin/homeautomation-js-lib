@@ -48,62 +48,63 @@ if (_.isNil(logName)) {
 }
 
 if (mqtt.setupClient == null) { 
-	mqtt.setupClient = function(connectedCallback, disconnectedCallback) {
-		if (_.isNil(host)) {
-			logging.warn('MQTT_HOST not set, aborting')
-			process.abort()
-		}
-
-		var mqtt_options = {}
-
-		if (!_.isNil(mqttUsername)) { 
-			mqtt_options.username = mqttUsername
-		}
-		if (!_.isNil(mqttPassword)) {
-			mqtt_options.password = mqttPassword
-		}
-    
-		if (!_.isNil(logName)) {
-			mqtt_options.will = {}
-			mqtt_options.will.topic = fix_name('/status/' + logName)
-			mqtt_options.will.payload = '0'
-			mqtt_options.will.retain = true
-		}
-
-		const client = mqtt.connect(host, mqtt_options)
-
-		// MQTT Observation
-
-		client.on('connect', () => {
-			logging.info('MQTT Connected')
-			
-			publish_map = {}
-
-			if (!_.isNil(logName)) {
-				client.publish(fix_name('/status/' + logName), '1', {retain: true})
-			}
-        
-			if (!_.isNil(connectedCallback)) {
-				connectedCallback() 
-			}
-		})
-
-		client.on('disconnect', () => {
-			logging.error('MQTT Disconnected, reconnecting')
-		
-			publish_map = {}
-
-			client.connect(host)
-    
-			if (!_.isNil(disconnectedCallback)) {
-				disconnectedCallback() 
-			}
-		})
-
-		return client
-	} 
+	mqtt.setupClient = exports.setupClient
 }
 
+exports.setupClient = function(connectedCallback, disconnectedCallback) {
+	if (_.isNil(host)) {
+		logging.warn('MQTT_HOST not set, aborting')
+		process.abort()
+	}
+
+	var mqtt_options = {}
+
+	if (!_.isNil(mqttUsername)) { 
+		mqtt_options.username = mqttUsername
+	}
+	if (!_.isNil(mqttPassword)) {
+		mqtt_options.password = mqttPassword
+	}
+
+	if (!_.isNil(logName)) {
+		mqtt_options.will = {}
+		mqtt_options.will.topic = fix_name('/status/' + logName)
+		mqtt_options.will.payload = '0'
+		mqtt_options.will.retain = true
+	}
+
+	const client = mqtt.connect(host, mqtt_options)
+
+	// MQTT Observation
+
+	client.on('connect', () => {
+		logging.info('MQTT Connected')
+		
+		publish_map = {}
+
+		if (!_.isNil(logName)) {
+			client.publish(fix_name('/status/' + logName), '1', {retain: true})
+		}
+	
+		if (!_.isNil(connectedCallback)) {
+			connectedCallback() 
+		}
+	})
+
+	client.on('disconnect', () => {
+		logging.error('MQTT Disconnected, reconnecting')
+	
+		publish_map = {}
+
+		client.connect(host)
+
+		if (!_.isNil(disconnectedCallback)) {
+			disconnectedCallback() 
+		}
+	})
+
+	return client
+} 
 
 exports.generateTopic = function() {
 	var topicString = ''
