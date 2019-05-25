@@ -7,16 +7,15 @@
         "url": "https://github.com/terafin/homeautomation-js-lib"
     },
     "dependencies": {
-        "chokidar": "^3.0.0",
         "express": "latest",
-        "graphite": "latest",
-        "js-yaml": "^3.13.1",
+        "js-yaml": "latest",
         "lodash": "latest",
         "mqtt": "latest",
+        "graphite": "latest",
         "path": "latest",
+        "winston": "latest",
         "url": "latest",
         "watch": "latest",
-        "winston": "latest",
         "winston-daily-rotate-file": "latest"
     },
     "engines": {
