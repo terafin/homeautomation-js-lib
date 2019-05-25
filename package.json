@@ -15,7 +15,6 @@
         "mqtt": "latest",
         "path": "latest",
         "url": "latest",
-        "watch": "latest",
         "winston": "latest",
         "winston-daily-rotate-file": "latest"
     },
