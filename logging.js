@@ -16,21 +16,33 @@ const winston = require('winston')
 
 require('winston-daily-rotate-file')
 
-const logFormat = function (shouldColor) {
+const timezoned = () => {
+	return new Date().toLocaleTimeString('en-US', {
+		year: 'numeric',
+		day: 'numeric',
+		month: 'numeric',
+		dateStyle: 'full',
+		timeZoneName: 'short',
+		timeStyle: 'full',
+	  	timeZone: process.env.TZ
+	})
+  };
+  
+const logFormat = function(shouldColor) {
 	if (shouldColor) {
 		return winston.format.combine(
-			winston.format.label({ label: '[' + logName + ']' }),
+			winston.format.label({label: '[' + logName + ']'}),
 			winston.format.colorize(),
 			winston.format.timestamp({
-				format: 'YYYY-MM-DD HH:mm:ss'
+				format: timezoned
 			}),
 			winston.format.printf(info => `${info.timestamp} ${info.label} ${info.level}: ${info.message}`))
 	}
 
 	return winston.format.combine(
-		winston.format.label({ label: '[' + logName + ']' }),
+		winston.format.label({label: '[' + logName + ']'}),
 		winston.format.timestamp({
-			format: 'YYYY-MM-DD HH:mm:ss'
+			format: timezoned
 		}),
 		winston.format.printf(info => `${info.timestamp} ${info.label} ${info.level}: ${info.message}`))
 
