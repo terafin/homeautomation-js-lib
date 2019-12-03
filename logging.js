@@ -24,9 +24,9 @@ const timezoned = () => {
 		dateStyle: 'full',
 		timeZoneName: 'short',
 		timeStyle: 'full',
-	  	timeZone: process.env.TZ
+		timeZone: process.env.TZ
 	})
-  };
+}
   
 const logFormat = function(shouldColor) {
 	if (shouldColor) {
