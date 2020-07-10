@@ -1,24 +1,24 @@
 {
-    "name": "homeautomation-js-lib",
-    "version": "0.0.1",
-    "description": "Generic stuff to use",
-    "license": "MIT",
-    "repository": {
-        "url": "https://github.com/terafin/homeautomation-js-lib"
-    },
-    "dependencies": {
-        "express": "latest",
-        "js-yaml": "latest",
-        "lodash": "4.17.16",
-        "mqtt": "latest",
-        "graphite": "latest",
-        "path": "latest",
-        "winston": "latest",
-        "url": "latest",
-        "watch": "latest",
-        "winston-daily-rotate-file": "4.4.2"
-    },
-    "engines": {
-        "node": ">=4"
-    }
+  "name": "homeautomation-js-lib",
+  "version": "0.0.1",
+  "description": "Generic stuff to use",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/terafin/homeautomation-js-lib"
+  },
+  "dependencies": {
+    "express": "latest",
+    "js-yaml": "latest",
+    "lodash": "4.17.16",
+    "mqtt": "latest",
+    "graphite": "latest",
+    "path": "latest",
+    "winston": "latest",
+    "url": "latest",
+    "watch": "latest",
+    "winston-daily-rotate-file": "4.4.2"
+  },
+  "engines": {
+    "node": ">=4"
+  }
 }
