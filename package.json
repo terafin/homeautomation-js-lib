@@ -9,7 +9,7 @@
     "dependencies": {
         "express": "latest",
         "js-yaml": "latest",
-        "lodash": "latest",
+        "lodash": "4.17.16",
         "mqtt": "latest",
         "graphite": "latest",
         "path": "latest",
