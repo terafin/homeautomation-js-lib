@@ -13,7 +13,7 @@
         "mqtt": "latest",
         "graphite": "latest",
         "path": "latest",
-        "winston": "latest",
+        "winston": "3.3.2",
         "url": "latest",
         "watch": "latest",
         "winston-daily-rotate-file": "4.4.2"
