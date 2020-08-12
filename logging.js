@@ -14,9 +14,9 @@ if (_.isNil(logLevel)) {
     logLevel = 'INFO'
 }
 
-// const log4js = require('log4js')
-// const logger = log4js.getLogger(logName)
+const log4js = require('log4js')
+const logger = log4js.getLogger(logName)
 
-// logger.level = logLevel
+logger.level = logLevel
 
-module.exports = console
+module.exports = logger
