@@ -14,12 +14,13 @@ const fix_name = function(str) {
 }
 
 if (mqtt.MqttClient.prototype.smartPublish == null) {
-    mqtt.MqttClient.prototype.smartPublish = function(topic, message, options) {
+    mqtt.MqttClient.prototype.smartPublish = function(topic, inMessage, options) {
         if (topic === null) {
             logging.error('empty client or topic passed into mqtt_helpers.publish')
             return
         }
         topic = fix_name(topic)
+        const message = inMessage.toString()
 
         logging.debug(' ' + topic + ':' + message)
         if (publish_map[topic] !== message) {
@@ -29,6 +30,26 @@ if (mqtt.MqttClient.prototype.smartPublish == null) {
         } else {
             logging.debug(' * not published')
         }
+    }
+}
+
+if (mqtt.MqttClient.prototype.smartPublishCollection == null) {
+    mqtt.MqttClient.prototype.smartPublishCollection = function(prefix, collection, skipping, options) {
+        if (_.isNil(collection)) {
+            return
+        }
+
+        Object.keys(collection).forEach(key => {
+            if (!_.isNil(skipping) && (skipping.indexOf(key) > -1)) {
+                return
+            }
+
+            this.smartPublish(
+                exports.generateTopic(prefix, key.toString()),
+                collection[key].toString(),
+                options)
+        });
+
     }
 }
 
@@ -116,7 +137,7 @@ exports.generateTopic = function() {
     var first = true
 
     for (var i = 0; i < arguments.length; i++) {
-        const component = arguments[i]
+        const component = arguments[i].toString()
         if (first) {
             first = false
         } else {
