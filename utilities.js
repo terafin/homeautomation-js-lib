@@ -9,7 +9,7 @@ const MIN_VALUES_FOR_RUNNING_AVERAGE_THRESHOLD = 3
 const THRESHOLD_TO_THROW_AWAY = 6
 const MAX_VALUES_TO_THROW_AWAY = 2
 
-module.exports.add_running_average = function(key, value) {
+exports.add_running_average = function(key, value) {
     var values = running_average_map[key]
     if (_.isNil(values)) {
         values = []
@@ -37,7 +37,7 @@ module.exports.add_running_average = function(key, value) {
     }
 }
 
-module.exports.running_average = function(key) {
+exports.running_average = function(key) {
     var values = running_average_map[key]
     if (_.isNil(values)) {
         return 0
