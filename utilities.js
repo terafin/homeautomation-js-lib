@@ -9,14 +9,14 @@ const MIN_VALUES_FOR_RUNNING_AVERAGE_THRESHOLD = 3
 const THRESHOLD_TO_THROW_AWAY = 6
 const MAX_VALUES_TO_THROW_AWAY = 2
 
-exports.add_running_average = function(key, value) {
+module.exports.add_running_average = function(key, value) {
     var values = running_average_map[key]
     if (_.isNil(values)) {
         values = []
         values_thrown_away_counter[key] = 0
     }
 
-    const current_average = running_average(key)
+    const current_average = module.exports.running_average(key)
     const already_thrown_away = values_thrown_away_counter[key]
     const is_value_out_of_range = Math.abs(current_average - value) >= THRESHOLD_TO_THROW_AWAY
     const do_we_have_enough_data = values.length >= MIN_VALUES_FOR_RUNNING_AVERAGE_THRESHOLD
@@ -37,7 +37,7 @@ exports.add_running_average = function(key, value) {
     }
 }
 
-exports.running_average = function(key) {
+module.exports.running_average = function(key) {
     var values = running_average_map[key]
     if (_.isNil(values)) {
         return 0
@@ -46,7 +46,6 @@ exports.running_average = function(key) {
 
     values.forEach(value => {
         average += value
-
     })
 
     return (average / values.length).toFixed(2)
