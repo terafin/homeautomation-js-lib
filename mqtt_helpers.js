@@ -15,10 +15,15 @@ const fix_name = function(str) {
 
 if (mqtt.MqttClient.prototype.smartPublish == null) {
     mqtt.MqttClient.prototype.smartPublish = function(topic, inMessage, options) {
-        if (topic === null) {
-            logging.error('empty client or topic passed into mqtt_helpers.publish')
+        if (_.isNil(topic)) {
+            logging.error('empty topic passed into mqtt_helpers.smartPublish')
             return
         }
+        if (_.isNil(inMessage)) {
+            logging.error('empty message passed into mqtt_helpers.smartPublish')
+            return
+        }
+
         topic = fix_name(topic)
         const message = inMessage.toString()
 
