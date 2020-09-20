@@ -143,11 +143,13 @@ exports.generateTopic = function() {
 
     for (var i = 0; i < arguments.length; i++) {
         const component = arguments[i].toString()
+
         if (first) {
             first = false
-        } else {
+        } else if (!_.endsWith(topicString, '/')) {
             topicString = topicString + '/'
         }
+
         topicString = topicString + fix_name(component)
     }
 
