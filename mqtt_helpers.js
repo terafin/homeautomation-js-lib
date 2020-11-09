@@ -49,10 +49,14 @@ if (mqtt.MqttClient.prototype.smartPublishCollection == null) {
                 return
             }
 
-            this.smartPublish(
-                exports.generateTopic(prefix, key.toString()),
-                collection[key].toString(),
-                options)
+            value = collection[key]
+
+            if (!_.isNil(value)) {
+                this.smartPublish(
+                    exports.generateTopic(prefix, key.toString()),
+                    value.toString(),
+                    options)
+            }
         });
 
     }
