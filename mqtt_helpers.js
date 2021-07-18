@@ -38,6 +38,30 @@ if (mqtt.MqttClient.prototype.smartPublish == null) {
     }
 }
 
+function isIterable(obj) {
+    if (obj == null) {
+        return false
+    }
+
+    if (_.isString(obj)) {
+        return false
+    }
+
+    if (_.isArray(obj)) {
+        return false
+    }
+
+    if (_.isNumber(obj)) {
+        return false
+    }
+
+    if (_.isBoolean(obj)) {
+        return false
+    }
+
+    return typeof obj.forEach == "function" || obj.keys == "function" || typeof obj[Symbol.iterator] !== 'function' // || (Object.keys(obj).length > 1)
+}
+
 if (mqtt.MqttClient.prototype.smartPublishCollection == null) {
     mqtt.MqttClient.prototype.smartPublishCollection = function(prefix, collection, skipping, options) {
         if (_.isNil(collection)) {
@@ -52,10 +76,19 @@ if (mqtt.MqttClient.prototype.smartPublishCollection == null) {
             value = collection[key]
 
             if (!_.isNil(value)) {
-                this.smartPublish(
-                    exports.generateTopic(prefix, key.toString()),
-                    value.toString(),
-                    options)
+                if (isIterable(value)) {
+                    logging.debug(key + ' IS a map')
+                    this.smartPublishCollection(
+                        exports.generateTopic(prefix, key.toString()),
+                        value, [],
+                        options)
+                } else {
+                    logging.debug(key + ' is not a map')
+                    this.smartPublish(
+                        exports.generateTopic(prefix, key.toString()),
+                        value.toString(),
+                        options)
+                }
             }
         });
 
