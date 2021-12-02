@@ -6,7 +6,7 @@ var publish_map = {}
 
 const fix_name = function(str) {
     str = str.replace(/[+\\&*%$#,@!’]/g, '')
-    str = str.replace(/\s/g, '_').trim().toLowerCase()
+    str = str.replace(/\s/g, '_').trim()
     str = str.replace(/__/g, '_')
     str = str.replace(/-/g, '_')
 
