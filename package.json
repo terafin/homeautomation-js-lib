@@ -7,14 +7,14 @@
         "url": "https://github.com/terafin/homeautomation-js-lib"
     },
     "dependencies": {
+        "graphite": "latest",
         "js-yaml": "latest",
         "lodash": "latest",
-        "mqtt": "latest",
-        "graphite": "latest",
-        "path": "latest",
         "log4js": "latest",
+        "mqtt": "latest",
+        "path": "latest",
         "url": "latest",
-        "watch": "latest"
+        "watch": "^0.13.0"
     },
     "engines": {
         "node": ">=4"
