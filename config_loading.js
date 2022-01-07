@@ -24,7 +24,7 @@ module.exports.load_path = function(in_path) {
       }).on('all', (event, path) => {
         logging.info('Updating configs')
         load_device_config()
-      });
+      })
 }
 
 module.exports.get_configs = function() {
