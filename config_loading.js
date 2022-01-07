@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const watch = require('watch')
+const chokidar = require('chokidar')
 const EventEmitter = require('events')
 const yaml = require('js-yaml')
 const logging = require('./logging.js')
@@ -18,14 +18,13 @@ module.exports.load_path = function(in_path) {
 
     config_path = in_path
 
-    // Watch Path
-    watch.watchTree(config_path, {
-        ignoreDotFiles: true,
-        interval: 30
-    }, function(f, curr, prev) {
+    const watcher = chokidar.watch(config_path, {
+        ignored: /(^|[\/\\])\../, // ignore dotfiles
+        persistent: true
+      }).on('all', (event, path) => {
         logging.info('Updating configs')
         load_device_config()
-    })
+      });
 }
 
 module.exports.get_configs = function() {

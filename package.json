@@ -14,7 +14,7 @@
         "mqtt": "latest",
         "path": "latest",
         "url": "latest",
-        "watch": "^0.13.0"
+        "chokidar": "latest"
     },
     "engines": {
         "node": ">=4"
